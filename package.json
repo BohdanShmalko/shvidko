@@ -1,0 +1,22 @@
+{
+  "name": "shvidko",
+  "version": "1.0.0",
+  "description": "simple http server implementation",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node ./test/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BohdanShmalko/shvidko.git"
+  },
+  "author": "Bogdan Shmalko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BohdanShmalko/shvidko/issues"
+  },
+  "homepage": "https://github.com/BohdanShmalko/shvidko#readme"
+}
