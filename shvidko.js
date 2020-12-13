@@ -63,7 +63,7 @@ class Svidko {
                     if(typeof data == "object") res.end(JSON.stringify(data))
                     else res.end(data)
                 }
-                if(reqObj.config.useDB) req.db = db
+                if(reqObj.config.useDB) req.db = this.db
 
                 if(reqObj.config.useSessions) 
                     SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, reqObj.callback, this.sessionClient)

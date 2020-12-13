@@ -26,3 +26,8 @@ request(`${baseUrl}/delete/:one/:two`, {json: true, method: 'DELETE'}, (err, res
     if (err) { throw err }
     console.log('DELETE result :', body);
 });
+
+request(`${baseUrl}/dbtest`, {json: true, method: 'GET'}, (err, res, body) => {
+    if (err) { throw err }
+    console.log('GET test DB result :', body);
+});
