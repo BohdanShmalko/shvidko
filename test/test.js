@@ -6,8 +6,10 @@ const options = {
         'Access-Control-Allow-Methods' : 'GET, POST, PATCH, DELETE, OPTIONS',
         'Access-Control-Allow-Origin': '*'
     },
-    sessionsClient : null, //optional option (under development)
-    sessionsTime : 60 * 60 * 2 //two hours
+    sessions : {
+        time : 60*60, //in seconds
+        path : './sessions/'
+    }
 }
 
 const app = new Svidko(options)
@@ -17,6 +19,16 @@ const getExample = requestCreator("get", "/", (req, res) => {
     res.send("this is my main page")
     //const db = req.db //if you use database
 }, {useDB : false, useSessions : false}) // optional settings if no sessions or database are used
+
+const sessionTest = requestCreator("get", "/sessionTest", async (req, res) => {
+    let session = req.session
+    let data = await session.get()
+    data.qwer = "tyu"
+    await session.set(data)
+    let updateData = await session.get()
+    console.log(updateData);
+    res.send("this is test session page")
+}, {useDB : false, useSessions : true}) 
 
 const getParamsExample = requestCreator("get", "/someUrl/:value1/:value2", (req, res) => { //example url : http://localhost:3001/someUrl/:10/:ten
     const {value1, value2} = req.params
@@ -30,4 +42,4 @@ const postExample = requestCreator("post", "/", (req, res) => {
 
 
 
-app.compose(getExample, getParamsExample, postExample)
+app.compose(getExample, getParamsExample, postExample, sessionTest)

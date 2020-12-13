@@ -1,4 +1,6 @@
-const Client = require('./client')
+const Client = require('./client'),
+      SessionClient = require('./deffaultSessionClient')
+      fs = require('fs')
 
 const TOKEN_LENGTH = 100,
       ALPHA_UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -18,10 +20,11 @@ const generateToken = () => {
 }
 
 class Sesion {
-    constructor(req, res, sessionClient, sessionTime){
-        this.client = new Client(req, res)
-        this.sessionClient = sessionClient
-        this.time = sessionTime
+    constructor(req, res, sessionTime, sessionsPath){
+        this.client = new Client(req, res, sessionTime)
+        this.sessionClient = SessionClient
+        sessionsPath[sessionsPath.length-1] == '/' ? this.path = sessionsPath : this.path = sessionsPath+'/'
+        sessionTime !== null ? this.time = sessionTime * 1000 : this.time = null
         this.token = null
         this.initial()
     }
@@ -30,26 +33,21 @@ class Sesion {
         this.client.parseCookie()
         if(!this.client.cookie.token) {
             this.token = generateToken()
-            await this.sessionClient.set(this.token, JSON.stringify({}), err => {
-                if(err) throw err 
-            })
             this.client.setCookie('token', this.token)
-            await this.sessionClient.expire(this.token, this.time)
+            let result = this.client.sendCookie()
+            if(result) await this.sessionClient.create(this.token, this.path)
+                .then(setTimeout(() => this.time && this.sessionClient.delete(this.token, this.path), this.time)) 
+            else 
+            console.log('\x1b[33m%s\x1b[0m', "WARNING : Session creation failed, check the CORS policy settings (you may need to change the settings in standartHeaders)"); 
         }else this.token = this.client.cookie.token     
     }
 
-    async get(callback) {
-        let {token} = this
-        await this.sessionClient.get(token, (err, data) => {
-            if(err) throw err 
-            callback(data)
-        })
+    get() {
+        return this.sessionClient.get(this.token, this.path)
     }
 
-    async set(object){
-        await this.sessionClient.set(this.token, JSON.stringify(object), err => {
-            if(err) throw err 
-        })
+    async set(data){
+        await this.sessionClient.set(this.token, data, this.path)
     }
     end(){
         this.client.sendCookie()

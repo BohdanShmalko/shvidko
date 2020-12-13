@@ -1,5 +1,3 @@
-//const Session = require('./session.js');
-const TWO_HOUR = 1000 * 60 * 60 * 2
 const COOKIE_DELETE = `=deleted; Expires=${new Date(0).toUTCString()}; Path=/; Domain=`;
 
 const parseHost = host => {
@@ -10,13 +8,13 @@ const parseHost = host => {
   };
 
 class Client {
-    constructor(req, res) {
+    constructor(req, res, time) {
       this.req = req;
       this.res = res;
       this.host = parseHost(req.headers.host);
       //this.token = undefined;
       //this.session = null;
-      this.expires = new Date(Date.now() + TWO_HOUR).toUTCString()
+      this.expires = new Date(Date.now() + time + 60*60*2).toUTCString()
       this.cookie = {};
       this.preparedCookie = [];
       //this.parseCookie();
@@ -56,8 +54,8 @@ class Client {
     sendCookie() {
       const { res, preparedCookie } = this;
       if (preparedCookie.length && !res.headersSent) {
-        console.dir({ preparedCookie });
         res.setHeader('Set-Cookie', preparedCookie);
+        return true
       }
     }
   }

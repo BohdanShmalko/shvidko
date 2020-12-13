@@ -1,19 +1,10 @@
 const Session = require("./session/session")
 
-const SessionWrapper = (req, res, sessionClient, sessionTime, callback) => {
-    const  session = new Session(req, res, sessionClient, sessionTime)
-    session.get( data => {
-    data = JSON.parse(data)
-    req.session = {
-        token : session.token,
-        data,
-        set(obj) {
-            session.set(obj)
-        }
-    }
-    session.end()                           
+const SessionWrapper = (req, res, sessionTime, sessionsPath, callback) => {
+    const session = new Session(req, res, sessionTime, sessionsPath)
+    req.session = session
+                       
     callback(req, res)
-    })
 }
 
 module.exports = {SessionWrapper}

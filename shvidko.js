@@ -11,20 +11,25 @@ const defaultOptions = {
         'Access-Control-Allow-Headers': 'Accept, Content-Type',
         'Access-Control-Allow-Origin': '*'
     },
-    sessionsClient : null,
-    sessionsTime : 60 * 60 * 2 //two hours
+    sessions : {
+        time : null,
+        path : './'
+    }
 }
 
 class Svidko {
     constructor(options = defaultOptions) {
         this.db = options.db
         this.standartHeaders = options.standartHeaders
+        if(options.sessions){
+            this.sessionsTime = options.sessions.time
+            this.sessionsPath = options.sessions.path
+        }
         this.routing = {get: {}, post: {}}
         this.app = http.createServer((req, res) => {
             standartOptions(req, res, this.standartHeaders)            
             getParser(this.routing.get, req, res)
             postParser(this.routing.post, req, res) 
-            
         })
     }
 
@@ -50,12 +55,12 @@ class Svidko {
                 }
                 if(reqObj.config.useDB) req.db = db
 
-                if(reqObj.config.hasSession) SessionWrapper(req, res, reqObj.callback)
+                if(reqObj.config.useSessions) 
+                    SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, reqObj.callback)
                 else reqObj.callback(req, res)
             })
         })
     }
-
     
 }
 
