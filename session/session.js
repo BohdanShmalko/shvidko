@@ -20,11 +20,11 @@ const generateToken = () => {
 }
 
 class Sesion {
-    constructor(req, res, sessionTime, sessionsPath){
-        this.client = new Client(req, res, sessionTime)
-        this.sessionClient = SessionClient
+    constructor(req, res, sessionTime, sessionsPath, sessionClient){
+        !sessionClient ? this.sessionClient = SessionClient : this.sessionClient = sessionClient
         sessionsPath[sessionsPath.length-1] == '/' ? this.path = sessionsPath : this.path = sessionsPath+'/'
         sessionTime !== null ? this.time = sessionTime * 1000 : this.time = null
+        this.client = new Client(req, res, this.time)
         this.token = null
         this.initial()
     }

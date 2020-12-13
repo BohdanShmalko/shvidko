@@ -1,13 +1,13 @@
 const http = require('http'),
-      {urlStandartForm, getParser} = require('./parsers/GETparser'),
-      postParser = require('./parsers/POSTparser'),
+      {urlStandartForm, urlParser} = require('./parsers/urlParser'),
+      bodyParser = require('./parsers/bodyParser'),
       {SessionWrapper} = require("./wrappers"),
       standartOptions = require("./options")
 
 const defaultOptions = {
     db : null,
     standartHeaders : {
-        'Access-Control-Allow-Methods' : 'GET, POST, PATCH, DELETE, OPTIONS',
+        'Access-Control-Allow-Methods' : 'GET, POST, DELETE, OPTIONS, PUT',
         'Access-Control-Allow-Headers': 'Accept, Content-Type',
         'Access-Control-Allow-Origin': '*'
     },
@@ -24,12 +24,13 @@ class Svidko {
         if(options.sessions){
             this.sessionsTime = options.sessions.time
             this.sessionsPath = options.sessions.path
+            this.sessionClient = options.sessions.client
         }
-        this.routing = {get: {}, post: {}}
+        this.routing = {get: {}, post: {}, put: {}, delete: {}}
         this.app = http.createServer((req, res) => {
             standartOptions(req, res, this.standartHeaders)            
-            getParser(this.routing.get, req, res)
-            postParser(this.routing.post, req, res) 
+            urlParser(this.routing, req, res)
+            bodyParser(this.routing, req, res) 
         })
     }
 
@@ -42,8 +43,17 @@ class Svidko {
         this.routing.get[urlWithoutParams] = {callback, params}
     }
 
+    delete(url, callback) {
+        const {urlWithoutParams, params} = urlStandartForm(url)
+        this.routing.delete[urlWithoutParams] = {callback, params}
+    }
+
     post(url, callback) {
         this.routing.post[url] = {callback}
+    }
+
+    put(url, callback) {
+        this.routing.put[url] = {callback}
     }
 
     compose(...requests) {
@@ -56,7 +66,7 @@ class Svidko {
                 if(reqObj.config.useDB) req.db = db
 
                 if(reqObj.config.useSessions) 
-                    SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, reqObj.callback)
+                    SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, reqObj.callback, this.sessionClient)
                 else reqObj.callback(req, res)
             })
         })

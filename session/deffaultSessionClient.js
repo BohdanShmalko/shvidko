@@ -5,7 +5,7 @@ const SessionClient = {
     
     create : async (token, path) => {
         if(token.indexOf('/') + 1 || token.indexOf('_') + 1)  throw "token is broken"
-        let startData = v8.serialize({lol : "kek"})
+        let startData = v8.serialize({})
         await fs.appendFile(path + token, startData, err => {
             if (err) throw err
           })
@@ -19,7 +19,10 @@ const SessionClient = {
     get : (token, path) => {
         return new Promise((resolve, reject) => {
             fs.readFile(path + token, (err, data) => {
-                    if(err) reject(err)
+                    if(err) {
+                        reject(err)
+                        return
+                    }
                     resolve(v8.deserialize(data))
                 })
           });

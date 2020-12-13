@@ -23,7 +23,7 @@ const getExample = requestCreator("get", "/", (req, res) => {
 const sessionTest = requestCreator("get", "/sessionTest", async (req, res) => {
     let session = req.session
     let data = await session.get()
-    data.qwer = "tyu"
+    data.test = "data"
     await session.set(data)
     let updateData = await session.get()
     console.log(updateData);
@@ -37,9 +37,19 @@ const getParamsExample = requestCreator("get", "/someUrl/:value1/:value2", (req,
 
 const postExample = requestCreator("post", "/", (req, res) => {
     const data = req.body
+    console.log(data);
     res.send({say : "I can give your data", data})
 })
 
+const putExample = requestCreator("put", "/", (req, res) => {
+    const data = req.body
+    console.log(data);
+    res.send({say : "I can give your data", data})
+})
 
+const deleteParamsExample = requestCreator("delete", "/delete/:value1/:value2", (req, res) => {
+    const {value1, value2} = req.params
+    res.send(`value1 = ${value1} and value2 = ${value2}`)
+})
 
-app.compose(getExample, getParamsExample, postExample, sessionTest)
+app.compose(getExample, getParamsExample, postExample, sessionTest, putExample, deleteParamsExample)

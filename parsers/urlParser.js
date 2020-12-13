@@ -14,22 +14,24 @@ const urlStandartForm = (url) => {
     return {urlWithoutParams, params}
 }
 
-const getParser = (routing, req, res) => {
-    if(req.method == 'GET'){
+const urlParser = (routing, req, res) => {
+    if(req.method == 'GET' || req.method == 'DELETE'){
+        let method
+        req.method == 'GET' ? method = 'get' : method = 'delete'
     const {urlWithoutParams, params} = urlStandartForm(req.url)
 
-        if(routing[urlWithoutParams]) {
+        if(routing[method][urlWithoutParams]) {
             let reqParams = {}
-            const urlParamsName =  routing[urlWithoutParams].params
+            const urlParamsName =  routing[method][urlWithoutParams].params
             for(let i = 0; i < urlParamsName.length; i++) {
                 let paramName = urlParamsName[i].substr(1)
                 let paramValue = params[i].substr(1)
                 reqParams[paramName] = paramValue
             } 
             req.params = reqParams
-            routing[urlWithoutParams].callback(req, res)
+            routing[method][urlWithoutParams].callback(req, res)
         }else res.end('page not found')
     }
 }
 
-module.exports = {getParser, urlStandartForm}
+module.exports = {urlParser, urlStandartForm}

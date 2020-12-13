@@ -1,8 +1,10 @@
 const {parse} = require("querystring")
 
-const postParser = (routing, req, res) => {
-    if (req.method == 'POST') {
-        if(routing[req.url]){
+const bodyParser = (routing, req, res) => {
+    if (req.method == 'POST' || req.method == 'PUT') {
+        let method
+        req.method == 'POST' ? method = 'post' : method = 'put'
+        if(routing[method][req.url]){
             let body = '';
 
             req.on('data', function (data) {
@@ -23,10 +25,10 @@ const postParser = (routing, req, res) => {
                     let parseData = parse(body)
                     req.body = parseData
                 }
-                routing[req.url].callback(req, res)
+                routing[method][req.url].callback(req, res)
             });
         }else res.end('page not found')
     }
 }
 
-module.exports = postParser
+module.exports = bodyParser
