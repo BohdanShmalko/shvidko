@@ -1,13 +1,13 @@
-const {Svidko, requestCreator} = require("../index"),
+const {Shvidko, requestCreator} = require("../index"),
       {Pool} = require("pg")
 
 const options = {
     db : new Pool({ 
         host : 'localhost',
         port : 5432,
-        database : 'appdb', 
-        user : 'postgres', 
-        password : '1234'
+        database : 'yourDatabase', 
+        user : 'yourUser', //postgres 
+        password : 'yourPassword'
         }), //can be Pull from pg library or other (optional option)
     standartHeaders : {  //optional option
         'Access-Control-Allow-Methods' : 'GET, POST, PATCH, DELETE, OPTIONS',
@@ -19,7 +19,7 @@ const options = {
     }
 }
 
-const app = new Svidko(options)
+const app = new Shvidko(options)
 app.listen(3001, () => console.log("start server"), "localhost")
 
 const getExample = requestCreator("get", "/", (req, res) => {

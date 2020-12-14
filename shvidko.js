@@ -17,7 +17,7 @@ const defaultOptions = {
     }
 }
 
-class Svidko {
+class Shvidko {
     constructor(options = defaultOptions) {
         this.db = options.db
         this.standartHeaders = options.standartHeaders
@@ -74,4 +74,4 @@ class Svidko {
     
 }
 
-module.exports = Svidko
+module.exports = Shvidko

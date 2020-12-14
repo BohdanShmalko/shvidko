@@ -1,4 +1,4 @@
-const Svidko = require("./shvidko"),
+const Shvidko = require("./shvidko"),
       requestCreator = require("./requestCreator")
 
-module.exports = {Svidko, requestCreator}
+module.exports = {Shvidko, requestCreator}
