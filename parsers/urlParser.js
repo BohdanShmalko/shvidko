@@ -16,8 +16,7 @@ const urlStandartForm = (url) => {
 
 const urlParser = (routing, req, res) => {
     if(req.method == 'GET' || req.method == 'DELETE'){
-        let method
-        req.method == 'GET' ? method = 'get' : method = 'delete'
+        let method = req.method.toLowerCase()
     const {urlWithoutParams, params} = urlStandartForm(req.url)
 
         if(routing[method][urlWithoutParams]) {

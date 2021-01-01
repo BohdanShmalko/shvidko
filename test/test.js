@@ -16,11 +16,15 @@ const options = {
     sessions : {
         time : 60*60, //in seconds
         path : './sessions/'
+    },
+    listen : {
+        port : 3001,
+        callback : () => console.log("start server"),
+        host : 'localhost'
     }
 }
 
 const app = new Shvidko(options)
-app.listen(3001, () => console.log("start server"), "localhost")
 
 const getExample = requestCreator("get", "/", (req, res) => {
     res.send("this is my main page")
@@ -33,7 +37,7 @@ const sessionTest = requestCreator("get", "/sessionTest", async (req, res) => {
     data.test = "data"
     await session.set(data)
     let updateData = await session.get()
-    res.send("this is test session page")
+    res.send(updateData, 200)
 }, {useSessions : true}) 
 
 const getParamsExample = requestCreator("get", "/someUrl/:value1/:value2", (req, res) => { //example url : http://localhost:3001/someUrl/:10/:ten
@@ -63,6 +67,13 @@ const dbExample = requestCreator("get", "/dbtest", async (req, res) => {
     }).catch(e => {throw e})
     res.send(`data from database : ${JSON.stringify(data)}`)
 }, {useDB : true})
+
+app.get('/somesimpleget', async (req, res) => {
+    let session = req.session
+    await session.set({someData : 'some data'})
+    let updateData = await session.get()
+    res.send(updateData, 200)
+}, {useSessions : true})
 
 app.compose(getExample, getParamsExample, postExample,
             sessionTest, putExample, deleteParamsExample,

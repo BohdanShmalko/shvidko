@@ -32,46 +32,55 @@ class Shvidko {
             urlParser(this.routing, req, res)
             bodyParser(this.routing, req, res) 
         })
+
+        if(options.listen) {
+            if(!options.listen.port) 
+            return console.log('WARNING : add port to listen in options')
+
+            this.listen(options.listen.port, options.listen.callback, options.listen.host)
+        }
     }
 
     listen(port, callback = null, host = 'localhost') {
         this.app.listen(port, host, callback);
+        return this
     }
 
-    get(url, callback) {
+    get(url, callback, config = {}) {
         const {urlWithoutParams, params} = urlStandartForm(url)
-        this.routing.get[urlWithoutParams] = {callback, params}
+        this.routing.get[urlWithoutParams] = {callback : this.callbackWrapper(callback, config), params}
     }
 
-    delete(url, callback) {
+    delete(url, callback, config = {}) {
         const {urlWithoutParams, params} = urlStandartForm(url)
-        this.routing.delete[urlWithoutParams] = {callback, params}
+        this.routing.delete[urlWithoutParams] = {callback : this.callbackWrapper(callback, config), params}
     }
 
-    post(url, callback) {
-        this.routing.post[url] = {callback}
+    post(url, callback, config = {}) {
+        this.routing.post[url] = {callback : this.callbackWrapper(callback, config)}
     }
 
-    put(url, callback) {
-        this.routing.put[url] = {callback}
+    put(url, callback, config = {}) {
+        this.routing.put[url] = {callback : this.callbackWrapper(callback, config)}
     }
 
     compose(...requests) {
-        requests.forEach(reqObj => {
-            this[reqObj.method](reqObj.url, (req,res) => {
-                res.send = (data) => {
-                    if(typeof data == "object") res.end(JSON.stringify(data))
-                    else res.end(data)
-                }
-                if(reqObj.config.useDB) req.db = this.db
-
-                if(reqObj.config.useSessions) 
-                    SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, reqObj.callback, this.sessionClient)
-                else reqObj.callback(req, res)
-            })
-        })
+        requests.forEach(reqObj =>
+            this[reqObj.method](reqObj.url, reqObj.callback, reqObj.config))
     }
-    
+
+    callbackWrapper = (callback, config) => (req, res) => {
+        res.send = (data, status) => {
+            if(status) res.writeHead(status)
+            if(typeof data == 'object') res.end(JSON.stringify(data))
+            else res.end(data)
+        }
+        if(config.useDB) req.db = this.db
+
+        if(config.useSessions) 
+            SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, callback, this.sessionClient)
+        else callback(req, res)
+    }
 }
 
 module.exports = Shvidko

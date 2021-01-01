@@ -9,55 +9,46 @@ const parseHost = host => {
 
 class Client {
     constructor(req, res, time) {
-      this.req = req;
-      this.res = res;
-      this.host = parseHost(req.headers.host);
-      //this.token = undefined;
-      //this.session = null;
+      this.req = req
+      this.res = res
+      this.host = parseHost(req.headers.host)
       this.expires = new Date(Date.now() + time + 60*60*2).toUTCString()
-      this.cookie = {};
-      this.preparedCookie = [];
-      //this.parseCookie();
+      this.cookie = {}
+      this.preparedCookie = []
     }
-  
-    //  static async getInstance(req, res) {
-    //    const client = new Client(req, res);
-    //    await Session.restore(client);
-    //    return client;
-    //  }
   
     parseCookie() {
       const { req } = this;
-      const { cookie } = req.headers;
+      const { cookie } = req.headers
       if (!cookie) return;
-      const items = cookie.split(';');
+      const items = cookie.split(';')
       for (const item of items) {
-        const parts = item.split('=');
-        const key = parts[0].trim();
-        const val = parts[1] || '';
-        this.cookie[key] = val.trim();
+        const parts = item.split('=')
+        const key = parts[0].trim()
+        const val = parts[1] || ''
+        this.cookie[key] = val.trim()
       }
     }
   
     setCookie(name, val, httpOnly = false) {
       const { host } = this;
-      const expires = `expires=${this.expires}`;
-      let cookie = `${name}=${val}; ${expires}; Path=/; Domain=${host}`;
-      if (httpOnly) cookie += '; HttpOnly';
-      this.preparedCookie.push(cookie);
+      const expires = `expires=${this.expires}`
+      let cookie = `${name}=${val}; ${expires}; Path=/; Domain=${host}`
+      if (httpOnly) cookie += '; HttpOnly'
+      this.preparedCookie.push(cookie)
     }
   
     deleteCookie(name) {
-      this.preparedCookie.push(name + COOKIE_DELETE + this.host);
+      this.preparedCookie.push(name + COOKIE_DELETE + this.host)
     }
     
     sendCookie() {
-      const { res, preparedCookie } = this;
+      const { res, preparedCookie } = this
       if (preparedCookie.length && !res.headersSent) {
-        res.setHeader('Set-Cookie', preparedCookie);
+        res.setHeader('Set-Cookie', preparedCookie)
         return true
       }
     }
   }
   
-  module.exports = Client;
+  module.exports = Client

@@ -1,6 +1,6 @@
 {
   "name": "shvidko",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "simple http server implementation",
   "main": "index.js",
   "directories": {
