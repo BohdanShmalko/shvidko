@@ -38,7 +38,7 @@ class Shvidko {
         }
 
         this.routing = {get: {}, post: {}, put: {}, delete: {}}
-        this.app = http.createServer((req, res) => {
+        this.server = http.createServer((req, res) => {
             standartOptions(req, res, this.standartHeaders)            
             urlParser(this.routing, req, res)
             bodyParser(this.routing, req, res) 
@@ -53,7 +53,7 @@ class Shvidko {
     }
 
     listen(port, callback = null, host = 'localhost') {
-        this.app.listen(port, host, callback);
+        this.server.listen(port, host, callback);
         return this
     }
 
