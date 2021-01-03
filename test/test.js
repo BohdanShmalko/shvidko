@@ -1,5 +1,6 @@
 const {Shvidko, requestCreator} = require("../index"),
-      {Pool} = require("pg")
+      {Pool} = require("pg"),
+      fs = require('fs')
 
 const options = {
     db : new Pool({ 
@@ -17,10 +18,13 @@ const options = {
         time : 60*60, //in seconds
         path : './sessions/'
     },
-    listen : {
+    listen : { //or simple app.listen(port, callback, host)
         port : 3001,
         callback : () => console.log("start server"),
         host : 'localhost'
+    },
+    fileStorage : { 
+        deffaultPath : './storage'
     }
 }
 
@@ -74,6 +78,17 @@ app.get('/somesimpleget', async (req, res) => {
     let updateData = await session.get()
     res.send(updateData, 200)
 }, {useSessions : true})
+
+app.get('/testforfs', async (req, res) => {
+    const image1 = fs.readFileSync('./test1.png')
+    const image2 = fs.readFileSync('./test2.png')
+    const {filePath} = req.fs.set(image1, 'picture')
+    //const {status} = req.fs.delete(filePath)
+    const {status} = req.fs.update(filePath, image2)
+
+    const file = req.fs.get(filePath)
+    res.sendFile(file, 200, {'Content-Type' : 'image/png'})
+}, {useFileStorage : true})
 
 app.compose(getExample, getParamsExample, postExample,
             sessionTest, putExample, deleteParamsExample,

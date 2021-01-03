@@ -1,31 +1,38 @@
 const http = require('http'),
       {urlStandartForm, urlParser} = require('./parsers/urlParser'),
       bodyParser = require('./parsers/bodyParser'),
-      {SessionWrapper} = require("./wrappers"),
-      standartOptions = require("./options")
-
-const defaultOptions = {
-    db : null,
-    standartHeaders : {
-        'Access-Control-Allow-Methods' : 'GET, POST, DELETE, OPTIONS, PUT',
-        'Access-Control-Allow-Headers': 'Accept, Content-Type',
-        'Access-Control-Allow-Origin': '*'
-    },
-    sessions : {
-        time : null,
-        path : './'
-    }
-}
+      {SessionWrapper, DbWrapper, FStorWrapper} = require("./wrappers"),
+      standartOptions = require("./options"),
+      fs = require('fs')
 
 class Shvidko {
     constructor(options = defaultOptions) {
-        this.db = options.db
         this.standartHeaders = options.standartHeaders
+
+        if(options.db){
+            this.useDB = true
+            this.db = options.db
+        }
+        
         if(options.sessions){
+            this.useSessions = true
             this.sessionsTime = options.sessions.time
             this.sessionsPath = options.sessions.path
             this.sessionClient = options.sessions.client
+
+            if (!fs.existsSync(this.sessionsPath))
+            fs.mkdirSync(this.sessionsPath)
         }
+
+        if(options.fileStorage){
+            this.useFS = true
+            this.storager = options.fileStorage.storager
+            this.deffaultPath = options.fileStorage.deffaultPath
+
+            if (!fs.existsSync(this.deffaultPath))
+            fs.mkdirSync(this.deffaultPath)
+        }
+
         this.routing = {get: {}, post: {}, put: {}, delete: {}}
         this.app = http.createServer((req, res) => {
             standartOptions(req, res, this.standartHeaders)            
@@ -70,16 +77,21 @@ class Shvidko {
     }
 
     callbackWrapper = (callback, config) => (req, res) => {
-        res.send = (data, status) => {
-            if(status) res.writeHead(status)
+        res.send = (data, ...headerOptions) => {
+            if(headerOptions.length !== 0) res.writeHead(...headerOptions)
             if(typeof data == 'object') res.end(JSON.stringify(data))
             else res.end(data)
         }
-        if(config.useDB) req.db = this.db
+        res.sendFile = (file, ...headerOptions) => {
+            if(headerOptions.length !== 0) res.writeHead(...headerOptions)
+            res.end(file)
+        }
 
-        if(config.useSessions) 
-            SessionWrapper(req, res, this.sessionsTime, this.sessionsPath, callback, this.sessionClient)
-        else callback(req, res)
+        if(this.useDB) DbWrapper(req, config, this.db)
+        if(this.useSessions) SessionWrapper(req, res, config,  this.sessionsTime, this.sessionsPath, this.sessionClient)
+        if(this.useFS) FStorWrapper(req, config, this.deffaultPath, this.storager)
+
+        callback(req, res)
     }
 }
 
