@@ -20,8 +20,10 @@ class Shvidko {
             this.sessionsPath = options.sessions.path
             this.sessionClient = options.sessions.client
 
-            if (!fs.existsSync(this.sessionsPath))
-            fs.mkdirSync(this.sessionsPath)
+            if(this.sessionsPath){
+                if (!fs.existsSync(this.sessionsPath))
+                fs.mkdirSync(this.sessionsPath)
+            }  
         }
 
         if(options.fileStorage){
@@ -29,8 +31,10 @@ class Shvidko {
             this.storager = options.fileStorage.storager
             this.deffaultPath = options.fileStorage.deffaultPath
 
-            if (!fs.existsSync(this.deffaultPath))
-            fs.mkdirSync(this.deffaultPath)
+            if(this.deffaultPath){
+                if (!fs.existsSync(this.deffaultPath))
+                fs.mkdirSync(this.deffaultPath)
+            } 
         }
 
         this.routing = {get: {}, post: {}, put: {}, delete: {}}
