@@ -34,7 +34,7 @@ class Sesion {
         if(!this.client.cookie.token) {
             this.token = generateToken()
             this.client.setCookie('token', this.token)
-            let result = this.client.sendCookie()
+            let result = this.end()
             if(result) await this.sessionClient.create(this.token, this.path)
                 .then(setTimeout(() => this.time && this.sessionClient.delete(this.token, this.path), this.time)) 
             else 
@@ -46,11 +46,18 @@ class Sesion {
         return this.sessionClient.get(this.token, this.path)
     }
 
-    async set(data){
-        await this.sessionClient.set(this.token, data, this.path)
+    set(data){
+        return this.sessionClient.set(this.token, data, this.path)
     }
+
+    async delete(){
+        this.client.deleteCookie(this.token)
+        await this.sessionClient.delete(this.token, this.path)
+        this.end()
+    }
+
     end(){
-        this.client.sendCookie()
+        return this.client.sendCookie()
     }
 }
 
