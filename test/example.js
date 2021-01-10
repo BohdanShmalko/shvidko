@@ -1,4 +1,4 @@
-const {Shvidko, requestCreator} = require("../index"),
+const {createServer, requestCreator} = require("../index"),
       {Pool} = require("pg"),
       fs = require('fs')
 
@@ -6,9 +6,9 @@ const options = {
     db : new Pool({ 
         host : 'localhost',
         port : 5432,
-        database : 'yourDatabase', 
-        user : 'yourUser', //postgres 
-        password : 'yourPassword'
+        database : 'gradebook', 
+        user : 'postgres', //postgres 
+        password : '1234'
         }), //can be Pull from pg library or other (optional option)
     standartHeaders : {  //optional option
         'Access-Control-Allow-Methods' : 'GET, POST, PATCH, DELETE, OPTIONS',
@@ -25,14 +25,10 @@ const options = {
     },
     fileStorage : { 
         deffaultPath : `${__dirname}/storage`
-    },
-    secure : {
-        key : fs.readFileSync(`${__dirname}/key.pem`),
-        cert : fs.readFileSync(`${__dirname}/cert.pem`)
     }
 }
 
-const app = new Shvidko(options)
+const app = createServer(options)
 
 const getExample = requestCreator("get", "/", (req, res) => {
     res.send("this is my main page")
