@@ -1,6 +1,6 @@
 const request = require('request');
 
-const baseUrl = "http://localhost:3001"
+const baseUrl = "https://localhost:3001"
 
 request(`${baseUrl}/`, {json: true, method: 'GET'}, (err, res, body) => {
     if (err) { throw err }

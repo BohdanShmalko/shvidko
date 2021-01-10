@@ -1,4 +1,5 @@
 const http = require('http'),
+      https = require('https'),
       {urlStandartForm, urlParser} = require('./parsers/urlParser'),
       bodyParser = require('./parsers/bodyParser'),
       {SessionWrapper, DbWrapper, FStorWrapper} = require("./wrappers"),
@@ -7,7 +8,6 @@ const http = require('http'),
 
 class Shvidko {
     constructor(options = defaultOptions) {
-        this.standartHeaders = options.standartHeaders
 
         if(options.db){
             this.useDB = true
@@ -37,13 +37,23 @@ class Shvidko {
             } 
         }
 
+        this.standartHeaders = options.standartHeaders
         this.routing = {get: {}, post: {}, put: {}, delete: {}}
-        this.server = http.createServer((req, res) => {
+
+        const serverFunc = (req, res) => {
             standartOptions(req, res, this.standartHeaders)            
             urlParser(this.routing, req, res)
             bodyParser(this.routing, req, res) 
-        })
+        }
 
+        if(options.secure){
+            const {key, cert} = options.secure
+            if(!key || !cert) throw new Error('Secure server must have key and cert')
+            this.server = https.createServer({key,cert}, serverFunc)
+        }else
+            this.server = http.createServer(serverFunc)
+        
+        
         if(options.listen) {
             if(!options.listen.port) 
             return console.log('WARNING : add port to listen in options')

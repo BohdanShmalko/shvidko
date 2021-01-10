@@ -24,7 +24,11 @@ const options = {
         host : 'localhost'
     },
     fileStorage : { 
-        deffaultPath : './storage'
+        deffaultPath : `${__dirname}/storage`
+    },
+    secure : {
+        key : fs.readFileSync(`${__dirname}/key.pem`),
+        cert : fs.readFileSync(`${__dirname}/cert.pem`)
     }
 }
 

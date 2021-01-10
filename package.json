@@ -1,6 +1,6 @@
 {
   "name": "shvidko",
-  "version": "1.3.4",
+  "version": "1.4.0",
   "description": "simple http server implementation",
   "main": "index.js",
   "directories": {
@@ -11,7 +11,8 @@
     "pg": "8.5.1"
   },
   "scripts": {
-    "test": "node ./test/test"
+    "test": "node ./test/testRequests",
+    "example" : "node ./test/example"
   },
   "repository": {
     "type": "git",
