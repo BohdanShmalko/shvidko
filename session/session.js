@@ -26,20 +26,25 @@ class Sesion {
         sessionTime !== null ? this.time = sessionTime * 1000 : this.time = null
         this.client = new Client(req, res, this.time)
         this.token = null
-        this.initial()
     }
 
-    async initial() {
+    async create() {
+        this.token = generateToken()
+        this.client.setCookie('token', this.token)
+        let result = this.end()
+        if(result) await this.sessionClient.create(this.token, this.path)
+            .then(setTimeout(() => this.time && this.sessionClient.delete(this.token, this.path), this.time)) 
+        else 
+            console.log('\x1b[33m%s\x1b[0m', "WARNING : Session creation failed, check the CORS policy settings (you may need to change the settings in standartHeaders)");
+    }
+
+    isExist() {
         this.client.parseCookie()
-        if(!this.client.cookie.token) {
-            this.token = generateToken()
-            this.client.setCookie('token', this.token)
-            let result = this.end()
-            if(result) await this.sessionClient.create(this.token, this.path)
-                .then(setTimeout(() => this.time && this.sessionClient.delete(this.token, this.path), this.time)) 
-            else 
-            console.log('\x1b[33m%s\x1b[0m', "WARNING : Session creation failed, check the CORS policy settings (you may need to change the settings in standartHeaders)"); 
-        }else this.token = this.client.cookie.token     
+        if(this.client.cookie.token) {
+            this.token = this.client.cookie.token
+            return true
+        }
+        return false
     }
 
     get() {
@@ -51,7 +56,7 @@ class Sesion {
     }
 
     async delete(){
-        this.client.deleteCookie(this.token)
+        this.client.deleteCookie('token')
         await this.sessionClient.delete(this.token, this.path)
         this.end()
     }

@@ -24,27 +24,27 @@ const createServer = options => {
     return {
         server, listen,
         
-        get(url, callback, config = {}) {
+        get(url, callback) {
             const {urlWithoutParams, params} = urlStandartForm(url)
-            routing.get[urlWithoutParams] = {callback : callbackWrapper(callback, config), params}
+            routing.get[urlWithoutParams] = {callback : callbackWrapper(callback), params}
         },
     
-        delete(url, callback, config = {}) {
+        delete(url, callback) {
             const {urlWithoutParams, params} = urlStandartForm(url)
-            routing.delete[urlWithoutParams] = {callback : callbackWrapper(callback, config), params}
+            routing.delete[urlWithoutParams] = {callback : callbackWrapper(callback), params}
         },
     
-        post(url, callback, config = {}) {
-            routing.post[url] = {callback : callbackWrapper(callback, config)}
+        post(url, callback) {
+            routing.post[url] = {callback : callbackWrapper(callback)}
         },
     
-        put(url, callback, config = {}) {
-            routing.put[url] = {callback : callbackWrapper(callback, config)}
+        put(url, callback) {
+            routing.put[url] = {callback : callbackWrapper(callback)}
         },
     
         compose(...requests) {
             requests.forEach(reqObj =>
-                this[reqObj.method](reqObj.url, reqObj.callback, reqObj.config))
+                this[reqObj.method.toLowerCase()](reqObj.url, reqObj.callback))
         }
     }
 }

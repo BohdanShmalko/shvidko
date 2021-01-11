@@ -13,9 +13,9 @@ const isExistSession = options => {
     if(options.sessions){
         const {time, path, client} = options.sessions
 
-        if(this.sessionsPath){
-            if (!fs.existsSync(this.sessionsPath))
-            fs.mkdirSync(this.sessionsPath)
+        if(path){
+            if (!fs.existsSync(path))
+            fs.mkdirSync(path)
         }  
         return {time, path, client, useSessions : true}
     }
@@ -26,9 +26,9 @@ const isExistFileStorage = options => {
     if(options.fileStorage){
         const {storager, deffaultPath} = options.fileStorage
 
-        if(this.deffaultPath){
-            if (!fs.existsSync(this.deffaultPath))
-            fs.mkdirSync(this.deffaultPath)
+        if(deffaultPath){
+            if (!fs.existsSync(deffaultPath))
+            fs.mkdirSync(deffaultPath)
         }
         return {storager, deffaultPath, useFS : true}
     }

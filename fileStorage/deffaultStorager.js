@@ -41,7 +41,7 @@ class Storager {
         this.deffaultPath = deffaultPath
     }
 
-    set = (file, type = 'deffault', format, userPath) => {
+    set = (file, type = 'deffault', userPath) => {
         let dirPath = userPath
         
         if(!dirPath)
