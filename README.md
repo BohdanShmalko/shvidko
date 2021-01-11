@@ -3,12 +3,12 @@
   Lightweight and fast http server with built-in sessions, file storage and more
 
 ```js
-const {Shvidko} = require('shvidko)
+const shvidko = require('shvidko)
 
-const app = new Shvidko().listen(3001)
+const app = shvidko.createServer().listen(3001)
 
 app.get('/', (req, res) => {
-  res.send('Hello World')
+  res.send('Hello World', 200)
 })
 ```
 
