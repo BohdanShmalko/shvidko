@@ -69,28 +69,28 @@ const dbExample = requestCreator('get', '/dbtest', async (req, res) => {
 
 const createSession = requestCreator('get', '/createSession', async (req, res) => {
     const {session} = req
-    if(session.isExist()) return res.send('You already use session')
+    if(session.isExist) return res.send('You already use session')
     await session.create()
     res.send('The session create')
 }) 
 
 const setSession = requestCreator('get', '/setSession/:someInf', async (req, res) => {
     const {session} = req
-    if(!session.isExist()) return res.send('You are not currently using a session')
+    if(!session.isExist) return res.send('You are not currently using a session')
     await session.set({someInf : req.params.someInf})
     res.send('Set inf to session is successful')
 })
 
 const getSession = requestCreator('get', '/getSession', async (req, res) => {
     const {session} = req
-    if(!session.isExist()) return res.send('You are not currently using a session')
+    if(!session.isExist) return res.send('You are not currently using a session')
     const sessionInf = await session.get()
     res.send(sessionInf)
 })
 
 const deleteSession = requestCreator('get', '/deleteSession', async (req, res) => {
     const {session} = req
-    if(!session.isExist()) return res.send('You are not currently using a session')
+    if(!session.isExist) return res.send('You are not currently using a session')
     await session.delete()
     res.send('Delete session is successful')
 })

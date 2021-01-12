@@ -17,7 +17,6 @@ const createServer = options => {
 
     const listen = (port, callback = null, host = 'localhost') => {
         server.listen(port, host, callback);
-        return this
     }
     optionChecker.isExistListen(options, listen)
 

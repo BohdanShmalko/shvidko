@@ -5,10 +5,11 @@
 ```js
 const shvidko = require('shvidko)
 
-const app = shvidko.createServer().listen(3001)
+const app = shvidko.createServer()
+app.listen(3001)
 
 app.get('/', (req, res) => {
-  res.send('Hello World', 200)
+  res.send('Hello World')
 })
 ```
 

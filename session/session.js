@@ -26,6 +26,7 @@ class Sesion {
         sessionTime !== null ? this.time = sessionTime * 1000 : this.time = null
         this.client = new Client(req, res, this.time)
         this.token = null
+        this.isExist = this.isExistToken()
     }
 
     async create() {
@@ -38,7 +39,7 @@ class Sesion {
             console.log('\x1b[33m%s\x1b[0m', "WARNING : Session creation failed, check the CORS policy settings (you may need to change the settings in standartHeaders)");
     }
 
-    isExist() {
+    isExistToken() {
         this.client.parseCookie()
         if(this.client.cookie.token) {
             this.token = this.client.cookie.token
