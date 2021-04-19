@@ -1,6 +1,6 @@
 {
   "name": "shvidko",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "simple http server implementation",
   "main": "shvidko.js",
   "directories": {
@@ -18,7 +18,7 @@
     "init": "node ./bin/shvidko.js -path ./"
   },
   "bin": {
-    "shvidko": "./bin/shvidko"
+    "shvidko": "bin/shvidko.js"
   },
   "repository": {
     "type": "git",
