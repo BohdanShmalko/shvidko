@@ -36,7 +36,7 @@ const main = (async () => {
     API: {},
   };
 
-  if (def.value !== false) options = await ci(name, path, port);
+  if (def.value === false) options = await ci(name, path, port);
 
   const creator = create(options.path);
   const app = creator.createDir(options.name);
