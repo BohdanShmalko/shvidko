@@ -15,7 +15,7 @@
     "test": "echo 'in future'",
     "simpleExample": "node ./examples/simple.js",
     "complexExample": "node ./examples/simple.js",
-    "init": "node ./init/init"
+    "init": "node ./bin/shvidko.js -path ./"
   },
   "bin": {
     "shvidko": "./bin/shvidko"
