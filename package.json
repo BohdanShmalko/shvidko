@@ -1,19 +1,24 @@
 {
   "name": "shvidko",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "simple http server implementation",
-  "main": "index.js",
+  "main": "shvidko.js",
   "directories": {
     "test": "test"
   },
   "devDependencies": {
-    "request": "2.88.2",
-    "pg": "8.5.1"
+    "pg": "8.5.1",
+    "prettier": "2.2.1",
+    "request": "2.88.2"
   },
   "scripts": {
-    "test": "node ./test/testRequests",
-    "example" : "node ./test/example",
-    "init" : "node ./init/init"
+    "test": "echo 'in future'",
+    "simpleExample": "node ./examples/simple.js",
+    "complexExample": "node ./examples/simple.js",
+    "init": "node ./init/init"
+  },
+  "bin": {
+    "shvidko": "./bin/shvidko"
   },
   "repository": {
     "type": "git",

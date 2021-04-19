@@ -1,0 +1,54 @@
+const shvidko = require("shvidko");
+-<f-const $F0Api = require("$F1");
+-f>-
+
+const app = shvidko.createServer({-<?-
+    //use https protocol
+    secure: {
+        key: "$E0", //location to your key.pem file
+        cert: "$E1", //location to your cert.pem file
+    },
+-?>-});
+app.listen($0, "localhost", () => {
+    console.log("server is start")
+})
+app.use(shvidko.middleware.sender()); // to use res.send (send data to the client)
+-<?-app.use(shvidko.middleware.fileStorage("$E0")); //to use file storage-?>-
+-<?-//app.use(shvidko.middleware.database(db)); //fill this variable with your database connection //to use db in requests-?>-
+-<?-app.use(
+    shvidko.middleware.cookieSession(
+        //to use cookie sessions
+        $E0, //session life in seconds
+        "$E1", //path where you want store sessions
+        null //session client. It is has the default value (you can use libraries with a similar interface, such as shvidko-redis)
+    )
+);-?>-
+// app.use(
+//     shvidko.middleware.cors({
+//         "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS, PUT",
+//     })
+// );
+app.use(
+    shvidko.middleware.urlParser(
+        // checking the existence of the page, the ability to transfer parameters
+        app.routing, //app routing
+        `<h1>Page not found in GET or DELETE request</h1>` //It is has the default value, can but you can indicate your interpretation when the page is not found
+    )
+);
+app.use(
+    shvidko.middleware.bodyParser(
+        //checking the existence of the page, you can view the body of the POST and PUT requests
+        app.routing, //app routing
+        `<h1>Page not found in POST or PUT request</h1>` //It is has the default value, can but you can indicate your interpretation when the page is not found
+    )
+);
+
+app.get("/", (req, res) => {
+    res.send("Hello world!");
+});
+
+app.addEndPoints(...mainAppApi);
+
+-<f-const $F0 = app.subroute("/$F0");
+$F0.addEndPoints(...$F0Api);
+-f>-

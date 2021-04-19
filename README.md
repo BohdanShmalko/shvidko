@@ -3,14 +3,15 @@
   Lightweight and fast http server with built-in sessions, file storage and more
 
 ```js
-const shvidko = require('shvidko)
+const shvidko = require("shvidko");
 
-const app = shvidko.createServer()
-app.listen(3001)
+const app = shvidko.createServer().listen(3001);
+app.use(shvidko.middleware.sender()); // to use res.send (send data to the client)
 
-app.get('/', (req, res) => {
-  res.send('Hello World')
-})
+// url : http://localhost:3001/
+app.get("/", (req, res) => {
+    res.send("Hello world!");
+});
 ```
 
 ## Installation
@@ -31,6 +32,16 @@ Installation is done using the
 $ npm install shvidko
 ```
 
+## Fast start
+
+```bash
+$ npx shvidko
+```
+OR
+```bash
+$ node ./node_modules/shvidko/bin/shvidko -path "./"
+```
+
 ## Features
 
   * Robust routing
@@ -40,6 +51,8 @@ $ npm install shvidko
   * Built-in session support
   * Built-in file storage support
   * Encapsulation requests
+  * Support for middleware
+  * Examples for different cases
 
 ## Examples
 
@@ -49,12 +62,22 @@ $ npm install shvidko
 $ git clone https://github.com/BohdanShmalko/shvidko.git
 $ cd shvidko
 $ npm install
+$ cd examples
 ```
 
-Then run the example
+Then run the one of examples
 
 ```bash
-$ npm test
+$ node simple
+$ node complex 
+$ node cors 
+$ node database 
+$ node fileStorage 
+$ node parsers 
+$ node requestsFromAnotherFile 
+$ node secure 
+$ node sessions 
+$ node subrouters 
 ```
 
 ## License
