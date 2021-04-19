@@ -1,0 +1,7 @@
+const {requestCreator} = require("shvidko");
+
+const example = requestCreator("get", "/$0", (req, res) => {
+    res.send("hello from $0")
+})
+
+module.exports = [example]

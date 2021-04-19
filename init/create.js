@@ -1,81 +1,40 @@
-const fs = require('fs')
-const serverContent = require('./content/server')
-const optionsContent = require('./content/options')
-const APIContent = require('./content/API')
-const APIfileContent = require('./content/APIfile')
-const dbConnectionContent = require('./content/dbConnection')
-const dbInterfaceContent = require('./content/dbInterface')
-const API = require('./content/API')
+const fs = require("fs");
+const logger = require("../lib/loger");
+const jstParser = require("./jstParser")
 
-const createDir = (path, name) => {
-    const fullPath = path + '/' + name
-    if (!fs.existsSync(fullPath)){
-        fs.mkdirSync(fullPath)
-        return 
+class Creator {
+  constructor(path) {
+    this.path = path;
+  }
+
+  createDir(name) {
+    const fullPath = this.path + "/" + name;
+    if (!fs.existsSync(fullPath)) {
+      fs.mkdirSync(fullPath);
+      return new Creator(fullPath);
     } else {
-        console.log(new Error('this directory is already exist'));
-        process.exit(1)
+      logger.error("This directory is already exist");
+      process.exit(1);
     }
-}
+  }
 
-const createFile = (path, name, content, extension = '.js') => {
-    const fullPath = path + '/' + name + extension
-    fs.writeFileSync(fullPath, content, 'utf-8')
-}
+  createFile(
+    name,
+    templatePath,
+    params,
+    extension = ".js"
+  ) {
+    const fullPath = this.path + "/" + name + extension;
 
-const create = {
-    file : {
-        'dbConnection' : (defPath) => {
-            createFile(defPath, 'dbConnection', dbConnectionContent())
-        },
-        'dbInterface' : (defPath, name) => {
-            createFile(defPath, name+'Interface', dbInterfaceContent())
-        },
-        'server' : (defPath, port) => {
-            createFile(defPath, 'server', serverContent(port))
-        },
-        'options' : (defPath, options) => {
-            createFile(defPath, 'options', optionsContent(options))
-        },
-        'API' : (defPath, pages) => {
-            createFile(defPath, 'API', APIContent(pages))
-        },
-        'APIfile' : (defPath, name) => {
-            createFile(defPath, name+'API', APIfileContent(name))
-        },
-        'cert' : (defPath) => {
-            createFile(defPath, 'cert', '', '.pem')
-        },
-        'key' : (defPath) => {
-            createFile(defPath, 'key', '', '.pem')
-        }
-    },
-    dir : {
-        'shvidko-app' : (defPath, name) => {
-            createDir(defPath, name)
-            return `${defPath}/${name}`
-        },
-        'src' : defPath => {
-            createDir(defPath, 'src')
-            return `${defPath}/src`
-        },
-        'API' : defPath => {
-            createDir(defPath, 'API')
-            return `${defPath}/API`
-        },
-        'database' : defPath => {
-            createDir(defPath, 'database')
-            return `${defPath}/database`
-        },
-        'server' : defPath => {
-            createDir(defPath, 'server')
-            return `${defPath}/server`
-        },
-        'cert' :  defPath => {
-            createDir(defPath, 'cert')
-            return `${defPath}/cert`
-        }
+    try {
+      let jst = fs.readFileSync(templatePath, "utf-8");
+      const js = jstParser(jst, params).parse()
+
+      fs.writeFileSync(fullPath, js, "utf-8");
+    } catch (err) {
+      logger.warning("Bad path to file", err);
     }
+  }
 }
 
-module.exports = create
+module.exports = (path) => new Creator(path);
