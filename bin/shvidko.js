@@ -1,25 +1,27 @@
-const Flag = require("../init/flag");
-const create = require("../init/create");
-const ci = require("../init/ci");
-const logger = require("../lib/loger");
+#!/usr/bin/env node
+
+const Flag = require('../init/flag');
+const create = require('../init/create');
+const ci = require('../init/ci');
+const logger = require('../lib/loger');
 
 const flag = new Flag();
-const DEFAULT_NAME = "shvidko-app";
-const DEFAULT_PATH = "./";
+const DEFAULT_NAME = 'shvidko-app';
+const DEFAULT_PATH = './';
 const DEFAULT_PORT = 3001;
 
 let name = flag.add(
-  "name",
+  'name',
   DEFAULT_NAME,
-  "name of your future shvidko application"
+  'name of your future shvidko application'
 );
 let path = flag.add(
-  "path",
+  'path',
   DEFAULT_PATH,
-  "path where to create an application"
+  'path where to create an application'
 );
-let port = flag.add("port", DEFAULT_PORT, "port for your future application");
-let def = flag.add("def", false, "default options for creating app");
+let port = flag.add('port', DEFAULT_PORT, 'port for your future application');
+let def = flag.add('def', false, 'default options for creating app');
 
 flag.complete();
 
@@ -41,19 +43,19 @@ const main = (async () => {
   const creator = create(options.path);
   const app = creator.createDir(options.name);
 
-  const src = app.createDir("src");
-  const API = src.createDir("API");
+  const src = app.createDir('src');
+  const API = src.createDir('API');
 
   const routsNames = [];
   const routsRequire = [];
   for (let rout in options.API) {
     let routDir;
-    if (rout === "mainApp") {
-      routsRequire.push([rout, options.path + "src/API/API"]);
+    if (rout === 'mainApp') {
+      routsRequire.push([rout, options.path + 'src/API/API']);
       routDir = API;
     } else {
       routsNames.push([rout]);
-      routsRequire.push([rout, options.path + "src/API/" + rout + "/API"]);
+      routsRequire.push([rout, options.path + 'src/API/' + rout + '/API']);
       routDir = API.createDir(rout);
     }
 
@@ -65,12 +67,12 @@ const main = (async () => {
       });
     });
 
-    routDir.createFile("API", `${__dirname}/../init/templates/api.jst`, {
+    routDir.createFile('API', `${__dirname}/../init/templates/api.jst`, {
       loops: [endPointsNames, endPointsNames],
     });
   }
 
-  app.createFile("app", `${__dirname}/../init/templates/app.jst`, {
+  app.createFile('app', `${__dirname}/../init/templates/app.jst`, {
     loops: [routsRequire, routsNames],
     conditions: [
       {

@@ -1,4 +1,4 @@
-const readline = require("readline");
+const readline = require('readline');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -8,8 +8,8 @@ const rl = readline.createInterface({
 let line = 1;
 const message = (question) =>
   new Promise((resolve, reject) => {
-    rl.question("⌛️" + question, (data) => {
-      console.log(`\x1b[${line};0H` + "✅ " + question + data);
+    rl.question('⌛️' + question, (data) => {
+      console.log(`\x1b[${line};0H` + '✅ ' + question + data);
       line++;
       resolve(data);
     });
@@ -17,24 +17,24 @@ const message = (question) =>
 
 const messageReplace = async (question) => {
   const value = await message(question);
-  return value.replace(/\s/g, "");
+  return value.replace(/\s/g, '');
 };
 
-const messageYN = async (question, defValue = "n") => {
+const messageYN = async (question, defValue = 'n') => {
   let value = await message(`${question} (y/n)? (${defValue}) : `);
-  if (defValue === "y" && !value) return true;
-  else if (defValue === "n" && !value) return false;
+  if (defValue === 'y' && !value) return true;
+  else if (defValue === 'n' && !value) return false;
 
-  if (value === "n" || value === "not") return false;
-  else if (value === "y" || value === "yes") return true;
+  if (value === 'n' || value === 'not') return false;
+  else if (value === 'y' || value === 'yes') return true;
   else throw `The '${value}' is not y or n`;
 };
 
-const messageLoop = async (questionYN, question, defName = "", arr = []) => {
+const messageLoop = async (questionYN, question, defName = '', arr = []) => {
   let want = await messageYN(questionYN);
   if (want) {
     let defValue = defName + arr.length;
-    let brackets = "";
+    let brackets = '';
     if (defName) brackets = `(${defValue})`;
     let currentQuestion = `${question} ${brackets} : `;
     let value = await messageReplace(currentQuestion);

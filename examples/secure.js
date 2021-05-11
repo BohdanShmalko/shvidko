@@ -1,4 +1,4 @@
-const shvidko = require("../shvidko");
+const shvidko = require('../shvidko');
 
 const app = shvidko
   .createServer({
@@ -11,6 +11,6 @@ const app = shvidko
 app.use(shvidko.middleware.sender()); // to use res.send (send data to the client)
 
 // url : https://localhost:3001/
-app.get("/", (req, res) => {
-  res.send("Hello world!");
+app.get('/', (req, res) => {
+  res.send('Hello world!');
 });

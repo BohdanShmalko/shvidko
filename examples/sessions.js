@@ -1,4 +1,4 @@
-const shvidko = require("../shvidko");
+const shvidko = require('../shvidko');
 
 const app = shvidko.createServer().listen(3001);
 app.use(shvidko.middleware.sender()); // to use res.send (send data to the client)
@@ -8,26 +8,26 @@ app.use(
 );
 
 // url : http://localhost:3001/createSession
-app.get("/createSession", async (req, res) => {
+app.get('/createSession', async (req, res) => {
   await req.session.create();
-  res.send("Session is created");
+  res.send('Session is created');
 });
 
 // url : http://localhost:3001/setToSession/?inf=someInf
-app.get("/setToSession/?inf", async (req, res) => {
+app.get('/setToSession/?inf', async (req, res) => {
   const oldData = await req.session.get(); //old data {}
   await req.session.set({ ...oldData, inf: req.params.inf }); //new data {inf : "someInf"}
-  res.send("addition successful");
+  res.send('addition successful');
 });
 
 // url : http://localhost:3001/getFromSession
-app.get("/getFromSession", async (req, res) => {
+app.get('/getFromSession', async (req, res) => {
   const data = await req.session.get();
   res.send(data);
 });
 
 // url : http://localhost:3001/deleteSession
-app.get("/deleteSession", async (req, res) => {
+app.get('/deleteSession', async (req, res) => {
   await req.session.delete();
-  res.send("removal successful");
+  res.send('removal successful');
 });
