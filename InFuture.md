@@ -3,4 +3,3 @@
 - implementation of load balancer
 - integration tests
 - an example of interaction with the docker
-- Travis integration
