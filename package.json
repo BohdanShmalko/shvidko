@@ -1,20 +1,22 @@
 {
   "name": "shvidko",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "simple http server implementation",
   "main": "shvidko.js",
   "directories": {
     "test": "test"
   },
   "devDependencies": {
+    "eslint": "^7.26.0",
+    "jest": "^26.6.3",
+    "node-mocks-http": "^1.10.1",
     "pg": "8.5.1",
-    "prettier": "2.2.1",
-    "request": "2.88.2"
+    "prettier": "2.2.1"
   },
   "scripts": {
-    "test": "echo 'in future'",
+    "test": "jest",
     "simpleExample": "node ./examples/simple.js",
-    "complexExample": "node ./examples/simple.js",
+    "complexExample": "node ./examples/complex.js",
     "init": "node ./bin/shvidko.js -path ./"
   },
   "bin": {

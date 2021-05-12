@@ -1,21 +1,21 @@
-const shvidko = require("../shvidko");
-const { Pool } = require("pg"); //for example - postgres
+const shvidko = require('../shvidko');
+const { Pool } = require('pg'); //for example - postgres
 
 const db = new Pool({
-  host: "localhost",
+  host: 'localhost',
   port: 5432,
-  database: "yourDatabase",
-  user: "yourDatabaseUser",
-  password: "yourUserPassword",
+  database: 'yourDatabase',
+  user: 'yourDatabaseUser',
+  password: 'yourUserPassword',
 });
 
 const app = shvidko.createServer({
   //listen in options
   listen: {
     port: 3001,
-    host: "localhost",
+    host: 'localhost',
     callback: () => {
-      console.log("server is start");
+      console.log('server is start');
     },
   },
   //use https protocol
@@ -37,10 +37,10 @@ app.use(
 );
 app.use(
   shvidko.middleware.cors({
-    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS, PUT",
-    "Access-Control-Allow-Headers": "Accept, Content-Type",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": true,
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS, PUT',
+    'Access-Control-Allow-Headers': 'Accept, Content-Type',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true,
   })
 );
 app.use(
@@ -64,42 +64,42 @@ app.use(
 // POST or PUT : https://localhost:3001/someBad - <h1>Page not found in POST or PUT request</h1>
 
 // GET : https://localhost:3001/
-app.get("/", (req, res) => {
-  res.send("Hello from GET");
+app.get('/', (req, res) => {
+  res.send('Hello from GET');
 });
 
 // POST : https://localhost:3001/
-app.post("/", (req, res) => {
-  res.send("Hello from POST");
+app.post('/', (req, res) => {
+  res.send('Hello from POST');
 });
 
 // DELETE : https://localhost:3001/
-app.delete("/", (req, res) => {
-  res.send("Hello from DELETE");
+app.delete('/', (req, res) => {
+  res.send('Hello from DELETE');
 });
 
 // PUT : https://localhost:3001/
-app.put("/", (req, res) => {
-  res.send("Hello from PUT");
+app.put('/', (req, res) => {
+  res.send('Hello from PUT');
 });
 
 /////// ways to write requests ////////
 
-const ways = app.subroute("/ways");
+const ways = app.subroute('/ways');
 
 // standard
 //GET : https://localhost:3001/ways/standard
-ways.get("/standard", (req, res) => {
-  res.send("standard");
+ways.get('/standard', (req, res) => {
+  res.send('standard');
 });
 
 // with object and addEndPoints
 //GET : https://localhost:3001/ways/object
 const withObject = {
-  method: "get",
-  url: "/object",
+  method: 'get',
+  url: '/object',
   callback: (req, res) => {
-    res.send("with object");
+    res.send('with object');
   },
 };
 ways.addEndPoints(withObject);
@@ -107,10 +107,10 @@ ways.addEndPoints(withObject);
 // with requestCreator and addEndPoints
 //GET : https://localhost:3001/ways/requestCreator
 const withCreator = shvidko.requestCreator(
-  "get",
-  "/requestCreator",
+  'get',
+  '/requestCreator',
   (req, res) => {
-    res.send("with requestCreator");
+    res.send('with requestCreator');
   }
 );
 ways.addEndPoints(withCreator);
@@ -118,24 +118,24 @@ ways.addEndPoints(withCreator);
 ////// DATABASE /////
 
 //GET : https://localhost:3001/database
-app.get("/database", async (req, res) => {
-  const { rows } = await req.db.query("SELECT * FROM yourTableName;");
+app.get('/database', async (req, res) => {
+  const { rows } = await req.db.query('SELECT * FROM yourTableName;');
   res.send(rows);
 });
 
 ////// SESSIONS AND FILE STORAGE /////
 
-const fsSessions = app.subroute("/fsSessions");
+const fsSessions = app.subroute('/fsSessions');
 
 // url : https://localhost:3001/fsSessions/createDirectory
-fsSessions.get("/createDirectory", async (req, res) => {
-  const { dirPath } = req.fs.create("create new directory"); // secret key
+fsSessions.get('/createDirectory', async (req, res) => {
+  const { dirPath } = req.fs.create('create new directory'); // secret key
   await req.session.create({ dir: dirPath });
   res.send(dirPath);
 });
 
 // url : https://localhost:3001/fsSessions/addFile/?content=someContent
-fsSessions.get("/addFile/?content", async (req, res) => {
+fsSessions.get('/addFile/?content', async (req, res) => {
   const { dir } = await req.session.get();
   const { fileName, dirPath } = req.fs.set(req.params.content, dir);
   const sessionData = await req.session.get();
@@ -144,25 +144,25 @@ fsSessions.get("/addFile/?content", async (req, res) => {
 });
 
 // url : https://localhost:3001/fsSessions/getFileContent
-fsSessions.get("/getFileContent", async (req, res) => {
+fsSessions.get('/getFileContent', async (req, res) => {
   const { dir, file } = await req.session.get();
-  const filePath = dir + "/" + file;
+  const filePath = dir + '/' + file;
   const content = req.fs.get(filePath);
-  res.send(content, shvidko.statusCode.OK, { "Content-Type": "text/plain" });
+  res.send(content, shvidko.statusCode.OK, { 'Content-Type': 'text/plain' });
 });
 
 // url : https://localhost:3001/fsSessions/updateFileContent/?content=newContent
-fsSessions.get("/updateFileContent/?content", async (req, res) => {
+fsSessions.get('/updateFileContent/?content', async (req, res) => {
   const { dir, file } = await req.session.get();
-  const filePath = dir + "/" + file;
+  const filePath = dir + '/' + file;
   const { status } = req.fs.update(filePath, req.params.content);
   res.send(status);
 });
 
 // url : https://localhost:3001/fsSessions/deleteFile
-fsSessions.get("/deleteFile", async (req, res) => {
+fsSessions.get('/deleteFile', async (req, res) => {
   const { dir, file } = await req.session.get();
-  const filePath = dir + "/" + file;
+  const filePath = dir + '/' + file;
   const { status } = req.fs.delete(filePath);
   await req.session.delete();
   res.send(status);

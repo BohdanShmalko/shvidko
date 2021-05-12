@@ -8,18 +8,18 @@ class JstParser {
   }
   parseLoops() {
     if (this.loops.length) {
-      let js = "";
-      let parts = this.jst.split("-<f-");
+      let js = '';
+      let parts = this.jst.split('-<f-');
       let i = 0;
       parts.forEach((part, indexF) => {
-        if (part.indexOf("-f>-") + 1) {
-          let [loop, content] = part.split("-f>-");
+        if (part.indexOf('-f>-') + 1) {
+          let [loop, content] = part.split('-f>-');
           const oneLoop = this.loops[i];
           i++;
           oneLoop.forEach((loopParams, index) => {
-            let tmp = "" + loop;
+            let tmp = '' + loop;
             loopParams.forEach((param, pIndex) => {
-              let re = new RegExp("\\$F" + pIndex, "g");
+              let re = new RegExp('\\$F' + pIndex, 'g');
               tmp = tmp.replace(re, param);
             });
             js += tmp;
@@ -35,17 +35,17 @@ class JstParser {
 
   parseConditions = () => {
     if (this.conditions.length) {
-      let js = "";
-      const parts = this.jst.split("-<?-");
+      let js = '';
+      const parts = this.jst.split('-<?-');
       let i = 0;
       parts.forEach((part, index) => {
-        if (part.indexOf("-?>-") + 1) {
-          let [cond, content] = part.split("-?>-");
+        if (part.indexOf('-?>-') + 1) {
+          let [cond, content] = part.split('-?>-');
           const params = this.conditions[i];
           i++;
           if (params.status) {
             params.params.forEach((param, index) => {
-              let re = new RegExp("\\$E" + index, "g");
+              let re = new RegExp('\\$E' + index, 'g');
               cond = cond.replace(re, param);
             });
             js += cond;
@@ -62,7 +62,7 @@ class JstParser {
     if (this.params.length) {
       let js = this.jst;
       this.params.forEach((param, index) => {
-        let re = new RegExp("\\$" + index, "g");
+        let re = new RegExp('\\$' + index, 'g');
         js = js.replace(re, param);
       });
       this.jst = js;

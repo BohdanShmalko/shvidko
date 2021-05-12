@@ -2,8 +2,8 @@ class Flag {
   constructor() {
     this.storage = {
       help: {
-        value: "",
-        description: "command that help",
+        value: '',
+        description: 'command that help',
       },
     };
   }
@@ -18,14 +18,14 @@ class Flag {
       let clearCommandName = allCommands[i];
       let isCommand = false;
       for (let i = 0; i < 2; i++) {
-        if (clearCommandName[0] === "-") {
+        if (clearCommandName[0] === '-') {
           isCommand = true;
           clearCommandName = clearCommandName.substr(1);
         }
       }
-      if (clearCommandName === "help" && isCommand) {
+      if (clearCommandName === 'help' && isCommand) {
         console.log(
-          "It is help command. (index) it is a command without - or --"
+          'It is help command. (index) it is a command without - or --'
         );
         console.table(this.storage);
         process.exit(0);
@@ -33,7 +33,7 @@ class Flag {
 
       if (this.storage[clearCommandName] && isCommand) {
         let parametr = this.storage[clearCommandName].value;
-        if (allCommands[i + 1] && allCommands[i + 1][0] !== "-") {
+        if (allCommands[i + 1] && allCommands[i + 1][0] !== '-') {
           parametr = allCommands[i + 1];
           i++;
         }
