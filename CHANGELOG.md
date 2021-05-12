@@ -1,9 +1,10 @@
 # Changelog
 
-## [3.1.0][] - ?
+## [3.1.0][] - May 12, 2021
 
 - changed the style of writing code in the library
 - added most of the unit tests
+- Travis integration
 
 ## [3.0.0][] - 19 Apr 2021
 
@@ -84,7 +85,7 @@
 - Support for options in the form of an object
 - Assignment cors policy
 
-[3.1.0]: https://github.com/BohdanShmalko/shvidko/???
+[3.1.0]: https://github.com/BohdanShmalko/shvidko/commit/4e8a95f1f7fac68a364434b577099f29ae33594b
 [3.0.0]: https://github.com/BohdanShmalko/shvidko/commit/17aacad9a22783ae4b1bae7806613b7109db9efc
 [2.2.0]: https://github.com/BohdanShmalko/shvidko/commit/f249814a6cbeb80e038268812d9863be81aa30c0
 [2.1.2]: https://github.com/BohdanShmalko/shvidko/commit/70a4f53e1384a12d19f3abbe02ed7a689de09ff9
