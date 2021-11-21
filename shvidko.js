@@ -10,6 +10,6 @@ module.exports = {
   requestCreator,
   middleware,
   statusCode,
-  createLoadBalancer,
-  balanceAlgorithms,
+  createLoadBalancer, //in process
+  balanceAlgorithms, //in process
 };
